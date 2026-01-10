@@ -1,2 +1,10 @@
 @import "tailwindcss";
 @import "@radix-ui/themes/styles.css";
+
+*{
+  font-family: 'Agdasima', sans-serif;
+}
+
+@theme {
+  --text-lg: 1.800vh;
+}

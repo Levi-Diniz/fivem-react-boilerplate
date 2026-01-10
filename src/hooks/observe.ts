@@ -1,51 +1,34 @@
-import { MutableRefObject, useEffect, useRef } from "react";
-import { isEnvBrowser, noop } from "@/utils/misc";
-
-import type { NuiMessageDataFrame } from "@/types";
+import { useEffect, useRef } from "react";
+import { isEnvBrowser, noop } from "../utils/misc";
+import type { NuiMessageDataFrame } from "../types";
 
 type NuiHandlerSignature<T> = (data: T) => void;
 
-class NuiListener<T> {
-  private action: string;
-  private savedHandler: MutableRefObject<NuiHandlerSignature<T>>;
-
-  constructor(action: string, handler: NuiHandlerSignature<T>) {
-    this.action = action;
-    this.savedHandler = useRef<NuiHandlerSignature<T>>(noop);
-    this.setHandler(handler);
-  }
-
-  setHandler(handler: NuiHandlerSignature<T>) {
-    this.savedHandler.current = handler;
-  }
-
-  observe() {
-    const eventListener = (event: MessageEvent<NuiMessageDataFrame<T>>) => {
-      const { action: eventAction, data } = event.data;
-      if (eventAction === this.action && this.savedHandler.current) {
-        if (isEnvBrowser()) {
-          console.log("Observed event:", event);
-        }
-        this.savedHandler.current(data);
-      }
-    };
-    window.addEventListener("message", eventListener);
-
-    return () => window.removeEventListener("message", eventListener);
-  }
-}
-
-export const observe = <T = unknown>(
+export function Observe<T = unknown>(
   action: string,
-  handler: (data: T) => void,
-) => {
-  const listener = useRef(new NuiListener<T>(action, handler));
+  handler: NuiHandlerSignature<T>,
+) {
+  const savedHandler = useRef<NuiHandlerSignature<T>>(noop);
 
+  // sempre mantém a referência atualizada
   useEffect(() => {
-    listener.current.setHandler(handler);
+    savedHandler.current = handler;
   }, [handler]);
 
   useEffect(() => {
-    return listener.current.observe();
+    const eventListener = (event: MessageEvent<NuiMessageDataFrame<T>>) => {
+      const { action: eventAction, data } = event.data;
+
+      if (eventAction === action) {
+        if (isEnvBrowser()) {
+          console.log("Observed event:", event);
+        }
+
+        savedHandler.current(data);
+      }
+    };
+
+    window.addEventListener("message", eventListener);
+    return () => window.removeEventListener("message", eventListener);
   }, [action]);
-};
+}

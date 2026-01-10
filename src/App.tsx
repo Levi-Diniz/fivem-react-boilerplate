@@ -1,7 +1,7 @@
-import HelowWoord from "./components/HelowWoord";
+import CustomGame from "./components/customGame/CustomGame";
 
 function App() {
-  return <HelowWoord />;
+  return <CustomGame />;
 }
 
 export default App;

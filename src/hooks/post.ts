@@ -1,4 +1,4 @@
-import { isEnvBrowser } from "@/utils/misc";
+import { isEnvBrowser } from "../utils/misc";
 
 export class Post<T = unknown> {
   private eventName: string;
@@ -33,8 +33,8 @@ export class Post<T = unknown> {
       return this.mockData;
     }
 
-    const resourceName = (window as any).GetParentResourceName
-      ? (window as any).GetParentResourceName()
+    const resourceName = window.GetParentResourceName
+      ? window.GetParentResourceName()
       : "nui-frame-app";
 
     try {

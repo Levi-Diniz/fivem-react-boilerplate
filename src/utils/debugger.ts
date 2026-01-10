@@ -1,4 +1,4 @@
-import { NuiDebugEventFrame } from "@/types";
+import { type NuiDebugEventFrame } from "../types";
 import { isEnvBrowser } from "./misc";
 
 export class Debugger {
