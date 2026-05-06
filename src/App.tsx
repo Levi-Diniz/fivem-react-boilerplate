@@ -1,7 +1,14 @@
-import CustomGame from "./components/customGame/CustomGame";
+import { VisibilityProvider } from "./providers/Visibility";
+import ExampleMenu from "./components/ExampleMenu";
+import "./style/global.css";
 
 function App() {
-  return <CustomGame />;
+  return (
+    <VisibilityProvider>
+      <ExampleMenu />
+    </VisibilityProvider>
+  );
 }
 
 export default App;
+
