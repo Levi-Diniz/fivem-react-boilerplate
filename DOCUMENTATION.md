@@ -45,12 +45,24 @@ import { Post } from "../hooks/post";
 
 const handleClick = async () => {
   try {
+    // A variável 'response' conterá o que for enviado pelo 'cb' no Lua
     const response = await Post.create("closeUI", { reason: "clicked_button" }, { status: "ok" });
     console.log("Resposta do Lua:", response);
   } catch (err) {
     console.error("Erro ao enviar post", err);
   }
 };
+```
+
+**Exemplo no Lua (Lado do Cliente):**
+Para que o `Post` receba uma resposta, você deve usar a função `cb` no seu script Lua:
+```lua
+RegisterNUICallback('closeUI', function(data, cb)
+    print("Motivo do fechamento:", data.reason)
+    
+    -- Envia a resposta de volta para o React
+    cb({ status = 'ok', message = 'Interface fechada com sucesso' })
+end)
 ```
 
 ### 3. `useListen` (Hook)
