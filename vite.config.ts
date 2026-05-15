@@ -11,4 +11,7 @@ export default defineConfig({
       },
     }),
   ],
+  // Base './' is required for FiveM NUI to load assets correctly from relative paths
+  base: './',
 })
+
